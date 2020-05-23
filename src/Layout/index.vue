@@ -24,5 +24,6 @@ export default {
         border-radius: 8px;
         overflow: hidden;
         margin:0 auto;
+        margin-top:100px;
     }
 </style>
