@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <todo-list :currentTag="currentTag"></todo-list>
+    <todo-list></todo-list>
   </div>
 </template>
 
@@ -11,18 +11,10 @@ export default {
   components: {
     TodoList
   },
-  props: {
-    currentTag: {
-      type: Object,
-      default() {
-        return {};
-      }
-    }
-  },
   setup() {
     const state = reactive({});
     return {
-      ...toRefs(state)
+      ...toRefs(state),
     };
   }
 };

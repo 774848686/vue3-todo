@@ -3,9 +3,6 @@
 </template>
 
 <script>
-// import Inputer from './components/Inputer'
-// import TodoList from './components/TodoList'
-// import Status from './components/Status'
 import Layout from "./Layout";
 
 import { reactive, computed, toRefs } from "vue";

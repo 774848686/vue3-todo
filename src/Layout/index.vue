@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
-    <Slide @tagChange="tagChange"/>
-    <Main :currentTag ="currentTag"/>
+    <Slide/>
+    <Main/>
   </div>
 </template>
 
@@ -16,14 +16,9 @@ export default {
   },
   setup(){
     const state = reactive({
-      currentTag:{}
     });
-    const tagChange = value=>{
-      state.currentTag = toRefs(value);
-    }
     return {
       ...toRefs(state),
-      tagChange
     }
   }
 };

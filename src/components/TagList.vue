@@ -11,7 +11,7 @@
           <img :src="currentIndex===index?item.icon_active:item.icon" alt />
           <p class="title">{{item.title}}</p>
         </div>
-        <div class="count">{{item.count}}</div>
+        <div class="count">{{item.child.length}}</div>
       </li>
     </ul>
   </div>
@@ -19,46 +19,57 @@
 
 <script>
 import { reactive, toRefs } from "vue";
+import { todoStorage } from "../utils/custom";
+import Subscribe from "../utils/Subscribe";
 export default {
-  setup(props,context) {
+  setup() {
     const state = reactive({
       tagList: [
         {
           id: "jintian",
           title: "今天",
           icon: require("../assets/jintian.png"),
-          icon_active:require("../assets/jintian_active.png"),
-          count: 0
+          icon_active: require("../assets/jintian_active.png"),
+          child: []
         },
         {
           id: "jihua",
           title: "计划",
           icon: require("../assets/jihuajindu.png"),
-          icon_active:require("../assets/jihuajindu_active.png"),
-          count: 0
+          icon_active: require("../assets/jihuajindu_active.png"),
+          child: []
         },
         {
           id: "quanbu",
           title: "全部",
           icon: require("../assets/quanbufenlei.png"),
-          icon_active:require("../assets/quanbufenlei_active.png"),
-          count: 0
+          icon_active: require("../assets/quanbufenlei_active.png"),
+          child: []
         },
         {
           id: "tixing",
           title: "提醒",
           icon: require("../assets/tixing.png"),
-          icon_active:require("../assets/tixing_active.png"),
-          count: 0
+          icon_active: require("../assets/tixing_active.png"),
+          child: []
         }
       ],
       currentIndex: 0
     });
     const tagClick = index => {
       state.currentIndex = index;
-      context.emit('tagChange',state.tagList[index])
+      Subscribe.$emit("tagclick", state.tagList[index].id);
     };
-     context.emit('tagChange',state.tagList[0])
+    state.tagList =
+      todoStorage.get().length > 4
+        ? todoStorage.get().slice(0, 4)
+        : state.tagList;
+    todoStorage.set(todoStorage.get().length>4 ? todoStorage.get() : state.tagList);
+    Subscribe.$emit("tagclick", state.tagList[0].id);
+
+    Subscribe.$on("updateTodo", () => {
+      state.tagList = todoStorage.get().slice(0, 4);
+    });
     return {
       ...toRefs(state),
       tagClick
@@ -127,7 +138,7 @@ export default {
           color: #fff;
         }
       }
-       &.active3 {
+      &.active3 {
         background: #f4b19e;
         p {
           color: #fff;

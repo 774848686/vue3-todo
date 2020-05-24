@@ -10,8 +10,8 @@
           v-for="(item,index) in taskList"
           :key="index"
         >
-          <div class="name">{{item.name}}</div>
-          <div class="count">{{item.child.length}}</div>
+          <div class="name">{{item.title}}</div>
+          <div class="count">{{item.child?item.child.length:0}}</div>
         </li>
         <li class="active" v-if="isCreated">
           <div class="name">
@@ -27,11 +27,13 @@
 
 <script>
 import { reactive, toRefs } from "vue";
+import { todoStorage } from "../utils/custom";
+import Subscribe from "../utils/Subscribe";
 export default {
   setup() {
     const NULL_TEX = "新建列表";
     let state = reactive({
-      taskList: [],
+      taskList: todoStorage.get().slice(4),
       createName: NULL_TEX,
       isCreated: false,
       currentIndex: null
@@ -40,17 +42,23 @@ export default {
       state.isCreated = true;
     };
     const inputBlur = () => {
-      state.taskList.push({
-        name: state.createName,
+      let waitPush = {
         id: state.taskList.length + 1,
+        title: state.createName,
         child: []
-      });
+      };
+      state.taskList.push(waitPush);
       state.createName = NULL_TEX;
       state.isCreated = false;
+      todoStorage.set([...todoStorage.get(), waitPush]);
     };
     const taskClick = index => {
       state.currentIndex = index;
+      Subscribe.$emit('tagclick',state.taskList[index].id)
     };
+    Subscribe.$on("updateTodo", () => {
+      state.taskList = todoStorage.get().slice(4);
+    });
     return {
       ...toRefs(state),
       addTask,

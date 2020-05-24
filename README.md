@@ -1,24 +1,22 @@
 # vue3-TODO-demo
 
-## Project setup
+#### 这是一个基于vue3.x版本，仿Mac系统的提醒事项的练习Demo
+#### 效果演示
+![avatar](/src/assets/1590330300406.jpg){:height="80px" width="100px"}
+## 安装依赖
 ```
 npm install
 ```
-
-### Compiles and hot-reloads for development
+### 启动项目
 ```
 npm run serve
 ```
-
-### Compiles and minifies for production
+### 项目打包
 ```
 npm run build
 ```
+## TODO
+1.搜索
+2.可编辑
+3.可查看已完成列表
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

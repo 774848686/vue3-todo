@@ -1,7 +1,7 @@
 <template>
   <div class="slide">
       <search-input></search-input>
-      <tag-list  @tagChange="tagChange"></tag-list>
+      <tag-list></tag-list>
       <task-list></task-list>
   </div>
 </template>
@@ -17,16 +17,11 @@ export default {
         TagList,
         TaskList
     },
-    setup(props,context){
+    setup(){
         const state = reactive({
-            currentTag:null
         });
-        const tagChange =value=>{
-            context.emit('tagChange',value)
-        }
         return {
             ...toRefs(state),
-            tagChange
         }
     }
 }
