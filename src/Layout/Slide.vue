@@ -1,7 +1,7 @@
 <template>
   <div class="slide">
       <search-input></search-input>
-      <tag-list></tag-list>
+      <tag-list  @tagChange="tagChange"></tag-list>
       <task-list></task-list>
   </div>
 </template>
@@ -10,11 +10,24 @@
 import searchInput from '../components/SearchInput';
 import TagList from '../components/TagList';
 import TaskList from '../components/TaskList';
+import {reactive,toRefs} from 'vue';
 export default {
     components:{
         searchInput,
         TagList,
         TaskList
+    },
+    setup(props,context){
+        const state = reactive({
+            currentTag:null
+        });
+        const tagChange =value=>{
+            context.emit('tagChange',value)
+        }
+        return {
+            ...toRefs(state),
+            tagChange
+        }
     }
 }
 </script>

@@ -1,8 +1,8 @@
 <template>
   <div class="todo-list">
     <div class="title">
-      <p>今日需求</p>
-      <p>6</p>
+      <p>{{currentTag.title}}</p>
+      <p>{{currentTag.count}}</p>
     </div>
     <div class="task-finish">
       <p>1项已经完成</p>
@@ -22,7 +22,30 @@
 </template>
 
 <script>
-export default {};
+import { reactive, toRefs,watch } from "vue";
+export default {
+  props: {
+    currentTag: {
+      type: Object,
+      default() {
+        return {};
+      }
+    }
+  },
+  setup(props) {
+    const state = reactive({
+    });
+     watch(
+      () => props.currentTag,
+      cur => {
+        console.log("todo", cur);
+      }
+    );
+    return {
+      ...toRefs(state)
+    }
+  }
+};
 </script>
 
 <style lang='scss' scoped>
@@ -38,9 +61,9 @@ export default {};
   .task-finish {
     display: flex;
     justify-content: space-between;
-    padding-bottom:5px;
-    margin-bottom:10px;
-    border-bottom:1px solid #e6e6e6;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #e6e6e6;
     p {
       font-size: 14px;
     }

@@ -1,17 +1,30 @@
 <template>
   <div class="layout">
-    <Slide />
-    <Main />
+    <Slide @tagChange="tagChange"/>
+    <Main :currentTag ="currentTag"/>
   </div>
 </template>
 
 <script>
 import Slide from "./Slide";
 import Main from "./Main";
+import {reactive,toRefs} from 'vue';
 export default {
   components: {
     Slide,
     Main
+  },
+  setup(){
+    const state = reactive({
+      currentTag:{}
+    });
+    const tagChange = value=>{
+      state.currentTag = toRefs(value);
+    }
+    return {
+      ...toRefs(state),
+      tagChange
+    }
   }
 };
 </script>
