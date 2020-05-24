@@ -2,7 +2,7 @@
 
 #### 这是一个基于vue3.x版本，仿Mac系统的提醒事项的练习Demo
 #### 效果演示
-![avatar](/src/assets/1590330300406.jpg){:height="80px" width="100px"}
+![avatar](/src/assets/1590330300406.jpg)
 ## 安装依赖
 ```
 npm install
