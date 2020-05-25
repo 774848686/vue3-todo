@@ -12,9 +12,17 @@
       <div class="toggle-btn">显示</div>
     </div>
     <div class="list">
-      <div class="list-item" v-for="item in todoList" :key="item.id">
+      <div class="list-item" v-for="item in todoList" :key="item.id" @dblclick="editeTodo(item)">
         <input type="checkbox" v-model="item.check" @change="deleTodo(item.id)" />
-        <p>{{item.detail}}</p>
+        <input
+          v-if="item.isEdite"
+          class="todo-input"
+          placeholder="请输入填写提醒事项"
+          @blur="todoEditeBlur(item)"
+          v-model="item.detail"
+          type="text"
+        />
+        <p v-else>{{item.detail}}</p>
       </div>
       <div class="list-item" v-if="isadd">
         <input type="checkbox" :disabled="!todoText" />
@@ -32,43 +40,29 @@
 </template>
 
 <script>
-import { reactive, toRefs, watch } from "vue";
-import { filters } from "../utils/custom";
+import { reactive, toRefs, computed } from "vue";
+import { filters, todoStorage } from "../utils/custom";
 import Subscribe from "../utils/Subscribe";
 export default {
-  setup(props) {
+  setup() {
     const { add, fetch, dele } = filters;
     const state = reactive({
       todoList: [],
       doneList: [],
       todoText: "",
       isadd: false,
-      todoCount: 0,
+      todoCount:computed(()=>{
+        return state.todoList.length;
+      }),
       currentTag: {}
     });
 
-    const initCOunt = () => {
-      state.todoCount = state.todoList.length;
-    };
-    initCOunt();
-    watch(
-      () => props.currentTag
-      // cur => {
-
-      // }
-    );
     Subscribe.$on("tagclick", id => {
       state.currentTag = fetch(id);
-      console.log(state.currentTag)
       state.todoList = state.currentTag.child;
       state.todoList.forEach(item => {
         item.check = false;
       });
-      state.doneList = state.currentTag.done || [];
-      state.doneList.forEach(item => {
-        item.check = false;
-      });
-      initCOunt();
     });
     const addTodo = () => {
       state.isadd = true;
@@ -81,20 +75,31 @@ export default {
       }).child;
       state.todoText = "";
       state.isadd = false;
-      state.todoCount = state.todoList.length;
       Subscribe.$emit("updateTodo");
     };
     const deleTodo = id => {
       state.todoList = dele(state.currentTag.id, id).child;
-      state.todoCount = state.todoList.length;
       Subscribe.$emit("updateTodo");
+    };
+    const editeTodo = row => {
+      row.isEdite = true;
+    };
+    const todoEditeBlur = row => {
+      row.isEdite = false;
+      state.todoText = "";
+      state.isadd = false;
+      let store = state.currentTag;
+      store.child = state.todoList;
+      todoStorage.reSet(state.currentTag.id, store);
     };
 
     return {
       ...toRefs(state),
       addTodo,
       todoBlur,
-      deleTodo
+      deleTodo,
+      editeTodo,
+      todoEditeBlur
     };
   }
 };

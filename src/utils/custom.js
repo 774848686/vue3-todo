@@ -9,6 +9,16 @@ export const todoStorage = {
     },
     set(value) {
         Store.set(KEY_STORE, JSON.stringify(value));
+    },
+    reSet(id, row) {
+        let store = todoStorage.get();
+        let curStore = store.map(item => {
+            if (item.id === id) {
+                item = row;
+            }
+            return item;
+        });
+        todoStorage.set(curStore);
     }
 }
 // NOTE：为了后期与后端进行数据交互，写了一个filters 去统一处理数据；

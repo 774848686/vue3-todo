@@ -71,14 +71,8 @@ export default {
     };
     const inputEditeBlur = row => {
       row.isEdite = false;
-      let store = todoStorage.get();
-      let curStore = store.map(item=>{
-        if(item.id===row.id){
-          item = row;
-        }
-        return item;
-      })
-      todoStorage.set(curStore);
+      todoStorage.reSet(row.id, row);
+      Subscribe.$emit("tagclick", row.id);
     };
     Subscribe.$on("updateTodo", () => {
       state.taskList = todoStorage.get().slice(4);
