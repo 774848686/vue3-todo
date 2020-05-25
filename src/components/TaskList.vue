@@ -5,12 +5,22 @@
       <ul>
         <li
           @click="taskClick(index)"
+          @dblclick="editeTask(item)"
           :class="index===currentIndex?'active':''"
           :data-index="index"
           v-for="(item,index) in taskList"
           :key="index"
         >
-          <div class="name">{{item.title}}</div>
+          <div class="name">
+            <input
+              v-if="item.isEdite"
+              type="text"
+              autofocus
+              @blur="inputEditeBlur(item)"
+              v-model="item.title"
+            />
+            <span v-else>{{item.title}}</span>
+          </div>
           <div class="count">{{item.child?item.child.length:0}}</div>
         </li>
         <li class="active" v-if="isCreated">
@@ -54,7 +64,21 @@ export default {
     };
     const taskClick = index => {
       state.currentIndex = index;
-      Subscribe.$emit('tagclick',state.taskList[index].id)
+      Subscribe.$emit("tagclick", state.taskList[index].id);
+    };
+    const editeTask = row => {
+      row.isEdite = true;
+    };
+    const inputEditeBlur = row => {
+      row.isEdite = false;
+      let store = todoStorage.get();
+      let curStore = store.map(item=>{
+        if(item.id===row.id){
+          item = row;
+        }
+        return item;
+      })
+      todoStorage.set(curStore);
     };
     Subscribe.$on("updateTodo", () => {
       state.taskList = todoStorage.get().slice(4);
@@ -63,7 +87,9 @@ export default {
       ...toRefs(state),
       addTask,
       inputBlur,
-      taskClick
+      taskClick,
+      editeTask,
+      inputEditeBlur
     };
   }
 };

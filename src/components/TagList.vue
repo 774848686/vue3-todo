@@ -64,7 +64,9 @@ export default {
       todoStorage.get().length > 4
         ? todoStorage.get().slice(0, 4)
         : state.tagList;
-    todoStorage.set(todoStorage.get().length>4 ? todoStorage.get() : state.tagList);
+    todoStorage.set(
+      todoStorage.get().length > 4 ? todoStorage.get() : state.tagList
+    );
     Subscribe.$emit("tagclick", state.tagList[0].id);
 
     Subscribe.$on("updateTodo", () => {
