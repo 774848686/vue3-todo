@@ -1,9 +1,10 @@
 <template>
   <div class="todo-list">
-    <div class="add-todo" @click="addTodo">
+    <div class="add-todo" @click="addTodo" v-if="currentTag.id!=='quanbu'">
       <img src="../assets/jia.png" alt />
     </div>
-    <div class="title">
+    <div class="keywords" v-if="keywords">{{`"${keywords}"`}}的搜索结果</div>
+    <div class="title" v-else>
       <p>{{currentTag.title}}</p>
       <p>{{todoCount}}</p>
     </div>
@@ -13,10 +14,11 @@
     </div>
     <div class="list">
       <div class="list-item" v-for="item in todoList" :key="item.id" @dblclick="editeTodo(item)">
-        <input type="checkbox" v-model="item.check" @change="deleTodo(item.id)" />
+        <input type="checkbox" v-model="item.check" @change="deleTodo(item)" />
         <input
           v-if="item.isEdite"
           class="todo-input"
+          autofocus
           placeholder="请输入填写提醒事项"
           @blur="todoEditeBlur(item)"
           v-model="item.detail"
@@ -28,6 +30,7 @@
         <input type="checkbox" :disabled="!todoText" />
         <input
           class="todo-input"
+          autofocus
           placeholder="请输入填写提醒事项"
           @blur="todoBlur"
           v-model="todoText"
@@ -40,23 +43,23 @@
 </template>
 
 <script>
-import { reactive, toRefs, computed } from "vue";
+import { reactive, toRefs, computed,onMounted } from "vue";
 import { filters, todoStorage } from "../utils/custom";
 import Subscribe from "../utils/Subscribe";
 export default {
   setup() {
-    const { add, fetch, dele } = filters;
+    const { add, fetch, dele,search } = filters;
     const state = reactive({
       todoList: [],
       doneList: [],
       todoText: "",
       isadd: false,
-      todoCount:computed(()=>{
+      todoCount: computed(() => {
         return state.todoList.length;
       }),
-      currentTag: {}
+      currentTag: {},
+      keywords:''
     });
-
     Subscribe.$on("tagclick", id => {
       state.currentTag = fetch(id);
       state.todoList = state.currentTag.child;
@@ -77,9 +80,12 @@ export default {
       state.isadd = false;
       Subscribe.$emit("updateTodo");
     };
-    const deleTodo = id => {
-      state.todoList = dele(state.currentTag.id, id).child;
+    const deleTodo = row => {
+      state.todoList = dele(row.parentId?row.parentId:state.currentTag.id, row.id).child;
       Subscribe.$emit("updateTodo");
+      if(state.keywords){
+        Subscribe.$emit("inputChange",state.keywords);
+      }
     };
     const editeTodo = row => {
       row.isEdite = true;
@@ -88,11 +94,14 @@ export default {
       row.isEdite = false;
       state.todoText = "";
       state.isadd = false;
-      let store = state.currentTag;
-      store.child = state.todoList;
-      todoStorage.reSet(state.currentTag.id, store);
+      todoStorage.reSet(state.currentTag.id, state.currentTag);
     };
-
+    onMounted(()=>{
+      Subscribe.$on('inputChange',value=>{
+        state.keywords = value;
+        state.todoList = search(value)
+      })
+    })
     return {
       ...toRefs(state),
       addTodo,
@@ -108,6 +117,13 @@ export default {
 <style lang='scss' scoped>
 .todo-list {
   position: relative;
+  .keywords{
+    width: 100%;
+    word-wrap:break-word;
+    font-size: 24px;
+    color:#5c6269;
+    margin-bottom: 15px;
+  }
   .add-todo {
     position: absolute;
     right: 0px;

@@ -1,21 +1,29 @@
 <template>
   <div class="inputer">
-    <input type="text" placeholder="搜索" v-model="todoContent" @keyup.enter="submit" />
+    <input
+      type="text"
+      placeholder="搜索"
+      @input="inputChange"
+      v-model="todoContent"
+    />
   </div>
 </template>
 
 <script>
+import Subscribe from "../utils/Subscribe";
+import { reactive, toRefs } from "vue";
 export default {
-  data() {
-    return {
+  setup() {
+    const state = reactive({
       todoContent: ""
-    };
-  },
-  methods: {
-    submit() {
-      this.$emit("submit", this.todoContent);
-      this.todoContent = "";
+    });
+    const inputChange = (e)=>{
+      Subscribe.$emit('inputChange',e.target.value)
     }
+    return {
+      ...toRefs(state),
+      inputChange
+    };
   }
 };
 </script>
@@ -25,7 +33,7 @@ export default {
   position: relative;
   box-sizing: border-box;
   width: 100%;
-  font-size:14px;
+  font-size: 14px;
   input {
     -webkit-appearance: none;
     background-color: #fff;
@@ -46,10 +54,10 @@ export default {
     width: 100%;
   }
 }
- input:focus {
-    outline: none;
-     border-color: #409eff;
-  }
+input:focus {
+  outline: none;
+  border-color: #409eff;
+}
 .inputer:after {
   position: absolute;
   left: 10px;

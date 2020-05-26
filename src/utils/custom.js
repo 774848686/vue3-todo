@@ -22,10 +22,22 @@ export const todoStorage = {
     }
 }
 // NOTE：为了后期与后端进行数据交互，写了一个filters 去统一处理数据；
-// 现在是存在缓存里，所以可省略；可直接用props的数据；
 export const filters = {
     fetch(id) {
         return todoStorage.get().filter(item => item.id === id)[0];
+    },
+    search(keyword) {
+        const store = todoStorage.get();
+        const SKIP_KEY = 'quanbu';
+        let filterCur = [];
+        let testtemp = store.filter(item => item.id !== SKIP_KEY).reduce((pre, cur) => {
+            filterCur = keyword ? cur.child.filter(item => item.detail.includes(keyword)) : cur.child
+            filterCur.forEach(item => {
+                item.parentId = cur.id;
+            });
+            return [...pre, ...filterCur];
+        }, [])
+        return testtemp
     },
     add(id, value) {
         let target = filters.fetch(id);

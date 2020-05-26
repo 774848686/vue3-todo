@@ -18,9 +18,10 @@
 </template>
 
 <script>
-import { reactive, toRefs } from "vue";
-import { todoStorage } from "../utils/custom";
+import { reactive, toRefs, onMounted } from "vue";
+import { todoStorage, filters } from "../utils/custom";
 import Subscribe from "../utils/Subscribe";
+const { set: storageSet, get: storageGet } = todoStorage;
 export default {
   setup() {
     const state = reactive({
@@ -61,16 +62,27 @@ export default {
       Subscribe.$emit("tagclick", state.tagList[index].id);
     };
     state.tagList =
-      todoStorage.get().length > 4
-        ? todoStorage.get().slice(0, 4)
-        : state.tagList;
-    todoStorage.set(
-      todoStorage.get().length > 4 ? todoStorage.get() : state.tagList
-    );
-    Subscribe.$emit("tagclick", state.tagList[0].id);
-
+      storageGet().length >= 4 ? storageGet().slice(0, 4) : state.tagList;
+    storageSet(storageGet().length >= 4 ? storageGet() : state.tagList);
     Subscribe.$on("updateTodo", () => {
-      state.tagList = todoStorage.get().slice(0, 4);
+      const store = storageGet();
+      const temp = store.map(item => {
+        if (item.id === "quanbu") {
+          item.child = filters.search();
+        }
+        return item;
+      });
+      state.tagList = temp.slice(0, 4);
+      storageSet(temp);
+      if (state.currentIndex > -1) {
+        Subscribe.$emit("tagclick", state.tagList[state.currentIndex].id);
+      }
+    });
+    onMounted(() => {
+      Subscribe.$emit("tagclick", state.tagList[0].id);
+      Subscribe.$on("inputChange", () => {
+        state.currentIndex = -1;
+      });
     });
     return {
       ...toRefs(state),

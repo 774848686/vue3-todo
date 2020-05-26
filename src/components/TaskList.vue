@@ -99,7 +99,7 @@ export default {
   }
   .list {
     margin-top: 15px;
-    max-height: 360px;
+    max-height: 300px;
     overflow-y: auto;
     li {
       cursor: pointer;
