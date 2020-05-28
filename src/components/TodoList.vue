@@ -70,7 +70,7 @@ export default {
     Subscribe.$on("tagclick", id => {
       state.currentTag = fetch(id);
       state.todoList = state.currentTag.child;
-      state.doneList = state.currentTag.done;
+      state.doneList = state.currentTag.done || [];
       state.todoList.forEach(item => {
         item.check = false;
       });
