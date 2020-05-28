@@ -55,7 +55,8 @@ export default {
       let waitPush = {
         id: state.taskList.length + 1,
         title: state.createName,
-        child: []
+        child: [],
+        done:[]
       };
       state.taskList.push(waitPush);
       state.createName = NULL_TEX;

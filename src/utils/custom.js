@@ -48,6 +48,8 @@ export const filters = {
     dele(parentId, id) {
         let target = filters.fetch(parentId);
         const curIndex = target.child.findIndex(item => item.id === id);
+        console.log(target.done,target.child,curIndex)
+        target.done.push(target.child[curIndex]);
         target.child = deleArr(target.child, curIndex);
         filters.filterSet(parentId, target);
         return filters.fetch(parentId);

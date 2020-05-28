@@ -31,28 +31,32 @@ export default {
           title: "今天",
           icon: require("../assets/jintian.png"),
           icon_active: require("../assets/jintian_active.png"),
-          child: []
+          child: [],
+          done:[]
         },
         {
           id: "jihua",
           title: "计划",
           icon: require("../assets/jihuajindu.png"),
           icon_active: require("../assets/jihuajindu_active.png"),
-          child: []
+          child: [],
+          done:[]
         },
         {
           id: "quanbu",
           title: "全部",
           icon: require("../assets/quanbufenlei.png"),
           icon_active: require("../assets/quanbufenlei_active.png"),
-          child: []
+          child: [],
+          done:[]
         },
         {
           id: "tixing",
           title: "提醒",
           icon: require("../assets/tixing.png"),
           icon_active: require("../assets/tixing_active.png"),
-          child: []
+          child: [],
+          done:[]
         }
       ],
       currentIndex: 0

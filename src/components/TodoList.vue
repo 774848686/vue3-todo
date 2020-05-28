@@ -9,8 +9,14 @@
       <p>{{todoCount}}</p>
     </div>
     <div class="task-finish" v-if="doneList.length">
-      <p>1项已经完成</p>
-      <div class="toggle-btn">显示</div>
+      <p>{{doneList.length}}项已经完成</p>
+      <div class="toggle-btn" @click="expandDone">{{isExpand?'隐藏':'显示'}}</div>
+    </div>
+    <div class="done-list" v-if="doneList.length && isExpand">
+      <div class="list-item" v-for="item in doneList" :key="item.id">
+        <input type="checkbox" class="disabled-box" disabled />
+        <p>{{item.detail}}</p>
+      </div>
     </div>
     <div class="list">
       <div class="list-item" v-for="item in todoList" :key="item.id" @dblclick="editeTodo(item)">
@@ -43,12 +49,12 @@
 </template>
 
 <script>
-import { reactive, toRefs, computed,onMounted } from "vue";
+import { reactive, toRefs, computed, onMounted } from "vue";
 import { filters, todoStorage } from "../utils/custom";
 import Subscribe from "../utils/Subscribe";
 export default {
   setup() {
-    const { add, fetch, dele,search } = filters;
+    const { add, fetch, dele, search } = filters;
     const state = reactive({
       todoList: [],
       doneList: [],
@@ -58,13 +64,19 @@ export default {
         return state.todoList.length;
       }),
       currentTag: {},
-      keywords:''
+      keywords: "",
+      isExpand:false
     });
     Subscribe.$on("tagclick", id => {
       state.currentTag = fetch(id);
       state.todoList = state.currentTag.child;
+      state.doneList = state.currentTag.done;
       state.todoList.forEach(item => {
         item.check = false;
+      });
+      state.doneList.forEach(item => {
+        item.check = true;
+        item.disabled = true;
       });
     });
     const addTodo = () => {
@@ -81,10 +93,13 @@ export default {
       Subscribe.$emit("updateTodo");
     };
     const deleTodo = row => {
-      state.todoList = dele(row.parentId?row.parentId:state.currentTag.id, row.id).child;
+      state.todoList = dele(
+        row.parentId ? row.parentId : state.currentTag.id,
+        row.id
+      ).child;
       Subscribe.$emit("updateTodo");
-      if(state.keywords){
-        Subscribe.$emit("inputChange",state.keywords);
+      if (state.keywords) {
+        Subscribe.$emit("inputChange", state.keywords);
       }
     };
     const editeTodo = row => {
@@ -96,19 +111,23 @@ export default {
       state.isadd = false;
       todoStorage.reSet(state.currentTag.id, state.currentTag);
     };
-    onMounted(()=>{
-      Subscribe.$on('inputChange',value=>{
+    const expandDone = ()=>{
+      state.isExpand = !state.isExpand;
+    }
+    onMounted(() => {
+      Subscribe.$on("inputChange", value => {
         state.keywords = value;
-        state.todoList = search(value)
-      })
-    })
+        state.todoList = search(value);
+      });
+    });
     return {
       ...toRefs(state),
       addTodo,
       todoBlur,
       deleTodo,
       editeTodo,
-      todoEditeBlur
+      todoEditeBlur,
+      expandDone
     };
   }
 };
@@ -117,11 +136,11 @@ export default {
 <style lang='scss' scoped>
 .todo-list {
   position: relative;
-  .keywords{
+  .keywords {
     width: 100%;
-    word-wrap:break-word;
+    word-wrap: break-word;
     font-size: 24px;
-    color:#5c6269;
+    color: #5c6269;
     margin-bottom: 15px;
   }
   .add-todo {
@@ -154,6 +173,7 @@ export default {
       font-size: 14px;
     }
     .toggle-btn {
+      cursor: pointer;
       font-size: 14px;
       color: #2f7cf6;
     }
@@ -201,6 +221,29 @@ export default {
     left: 25%;
     font-size: 32px;
     color: #c0c0c0;
+  }
+  .done-list {
+    margin-bottom: 24px;
+    .disabled-box {
+      position: relative;
+      width: 14px;
+      height: 14px;
+      appearance: none;
+      -webkit-appearance: none;
+      border: 1px solid #e97531;
+      border-radius: 100%;
+    }
+    .disabled-box:after {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: #e97531;
+      border-radius: 100%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
   }
 }
 </style>
