@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import Slide from "./Slide";
-import Main from "./Main";
+import Slide from "./Slide.vue";
+import Main from "./Main.vue";
 import {reactive,toRefs} from 'vue';
 export default {
   components: {

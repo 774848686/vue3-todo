@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import searchInput from '../components/SearchInput';
-import TagList from '../components/TagList';
-import TaskList from '../components/TaskList';
+import searchInput from '../components/SearchInput.vue';
+import TagList from '../components/TagList.vue';
+import TaskList from '../components/TaskList.vue';
 import {reactive,toRefs} from 'vue';
 export default {
     components:{

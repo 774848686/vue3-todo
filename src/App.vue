@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Layout from "./Layout";
+import Layout from "./Layout/index.vue";
 
 import { reactive, computed, toRefs } from "vue";
 
@@ -72,5 +72,4 @@ li,p {
   margin: 0;
   padding: 0;
 }
-@import "~normalize.css/normalize.css"; // normalize.css 样式格式化
 </style>

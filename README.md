@@ -1,30 +1,7 @@
-## vue3-TODO-demo
+# Vue 3 + Vite
 
-#### 这是一个基于vue3.x版本，仿Mac系统的提醒事项的练习Demo
-#### 功能说明
-1. 可新增我的列表
-2. 双击列表可进行修改
-3. 点击列表会展示对应的计划详情
-4. 可添加新的计划
-5. 点击多选框会将该计划设置为完成状态
-6. 双击计划可修改该计划
-7. 可进行搜索
-#### 效果演示
-![avatar](/src/assets/1590330300406.jpg)
-### 安装依赖
-```
-npm install
-```
-### 启动项目
-```
-npm run serve
-```
-### 项目打包
-```
-npm run build
-```
-### TODO
-1. 搜索 ✅
-2. 可编辑 ✅
-3. 可查看已完成列表 ✅
-- 好汉请留个star✨
+This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+
+## Recommended IDE Setup
+
+- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
