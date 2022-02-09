@@ -4,20 +4,8 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import TodoList from "../components/TodoList.vue";
-import { reactive, toRefs } from "vue";
-export default {
-  components: {
-    TodoList
-  },
-  setup() {
-    const state = reactive({});
-    return {
-      ...toRefs(state),
-    };
-  }
-};
 </script>
 
 <style lang="scss" scoped>

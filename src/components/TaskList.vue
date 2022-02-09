@@ -3,17 +3,17 @@
     <text class="title">我的列表</text>
     <div class="list">
       <ul>
-        <li @click="taskClick(index)" @dblclick="editeTask(item)" :class="index===currentIndex?'active':''"
-          :data-index="index" v-for="(item,index) in taskList" :key="index">
+        <li @click="taskClick(index)" @dblclick="editeTask(item)" :class="index===state.currentIndex?'active':''"
+          :data-index="index" v-for="(item,index) in state.taskList" :key="index">
           <div class="name">
             <input v-if="item.isEdite" type="text" autofocus @blur="inputEditeBlur(item)" v-model="item.title" />
             <span v-else>{{item.title}}</span>
           </div>
           <div class="count">{{item.child?item.child.length:0}}</div>
         </li>
-        <li class="active" v-if="isCreated">
+        <li class="active" v-if="state.isCreated">
           <div class="name">
-            <input type="text" autofocus @blur="inputBlur" v-model="createName" />
+            <input type="text" autofocus @blur="inputBlur" v-model="state.createName" />
           </div>
           <div class="count">0</div>
         </li>
@@ -26,10 +26,10 @@
 <script setup>
   import {
     reactive,
-    toRefs
   } from "vue";
   import {
-    todoStorage
+    todoStorage,
+    KEY_STORE
   } from "../utils/custom";
   import Subscribe from "../utils/Subscribe";
   const NULL_TEX = "新建列表";
@@ -39,7 +39,6 @@
     isCreated: false,
     currentIndex: null
   });
-  console.log(toRefs(state.taskList))
   const addTask = () => {
     state.isCreated = true;
   };
@@ -132,7 +131,7 @@
 
     .add-todo {
       position: absolute;
-      bottom: 0;
+      bottom: 10px;
       left: 0;
       padding-left: 20px;
       font-size: 14px;

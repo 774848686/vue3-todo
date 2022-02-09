@@ -2,7 +2,8 @@ import {
     Store,
     deleArr
 } from '../utils';
-const KEY_STORE = 'taskList-vue@3-demo'
+export const KEY_STORE = 'taskList-vue@3-demo';
+
 export const todoStorage = {
     get() {
         return JSON.parse(Store.get(KEY_STORE) || '[]')

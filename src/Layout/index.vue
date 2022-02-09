@@ -5,23 +5,9 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Slide from "./Slide.vue";
 import Main from "./Main.vue";
-import {reactive,toRefs} from 'vue';
-export default {
-  components: {
-    Slide,
-    Main
-  },
-  setup(){
-    const state = reactive({
-    });
-    return {
-      ...toRefs(state),
-    }
-  }
-};
 </script>
 
 <style lang='scss' scoped>

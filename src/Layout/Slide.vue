@@ -6,25 +6,10 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import searchInput from '../components/SearchInput.vue';
 import TagList from '../components/TagList.vue';
 import TaskList from '../components/TaskList.vue';
-import {reactive,toRefs} from 'vue';
-export default {
-    components:{
-        searchInput,
-        TagList,
-        TaskList
-    },
-    setup(){
-        const state = reactive({
-        });
-        return {
-            ...toRefs(state),
-        }
-    }
-}
 </script>
 
 <style lang="scss" scoped>
